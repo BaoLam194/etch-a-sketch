@@ -1,5 +1,11 @@
 let body=document.querySelector("body");
 
+function handleLeave(e){
+    e.target.style.backgroundColor="white";
+}
+
+
+
 function setupContainer(container){
     container.setAttribute("class", "container");
 
@@ -28,12 +34,9 @@ function createGridIntoContainer(n,container){
         sq.style.height ="45px";
         
         sq.addEventListener("mouseenter",function(e){
-            sq.style.backgroundColor=randomRGB();
+            if(!sq.style.backgroundColor || sq.style.backgroundColor=="white") sq.style.backgroundColor=randomRGB();
         });
-        sq.addEventListener("mouseleave",function(e){
-            sq.style.backgroundColor="white";
-        });
-    
+        sq.addEventListener("mouseleave",handleLeave);
     
     
         container.appendChild(sq);
@@ -71,3 +74,33 @@ function randomRGB(){
     }
     return `rgb(${ranNum(255)}, ${ranNum(255)}, ${ranNum(255)})`;
 }
+
+
+
+let resetButton = document.querySelector(".btnre");
+resetButton.addEventListener("click", function(e){
+    let currentContainer=document.querySelector(".container");
+    for(let child of currentContainer.children){
+        child.style.backgroundColor="white";
+    }
+});
+
+let toggleButton = document.querySelector(".btntog");
+let toggleBoolean = false;
+toggleButton.addEventListener("click",function(e){
+    let currentContainer=document.querySelector(".container");
+    if(toggleBoolean == false){
+        toggleButton.textContent="Draw-Enabled";
+        
+        for(let child of currentContainer.children){
+            child.removeEventListener("mouseleave",handleLeave);
+        }
+    }
+    else{
+        toggleButton.textContent="Draw-Disabled";
+        for(let child of currentContainer.children){
+            child.addEventListener("mouseleave",handleLeave);
+        }
+    }
+    toggleBoolean =!toggleBoolean;
+});
